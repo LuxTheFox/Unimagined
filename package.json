@@ -1,0 +1,19 @@
+{
+  "name": "FluidBot",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "repository": "https://github.com/LuxTheFox/FluidBot.git",
+  "author": "Lux <58230822+LuxTheFox@users.noreply.github.com>",
+  "license": "GPL-3.0-or-later",
+  "private": false,
+  "scripts": {
+    "build": "rimraf dist/ && tsc",
+    "start": "yarn build && cd dist && node index.js"
+  },
+  "dependencies": {
+    "oceanic.js": "^1.4.1"
+  },
+  "devDependencies": {
+    "rimraf": "^4.1.0"
+  }
+}
