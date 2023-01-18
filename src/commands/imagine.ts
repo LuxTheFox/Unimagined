@@ -26,13 +26,22 @@ export default new Command({
 		try {
 			await interaction.createFollowup({
 				content: `Generating imagine...`,
-				flags: MessageFlags.EPHEMERAL,
+				allowedMentions: {
+					repliedUser: true,
+				},
 			});
 
-			// const text = interaction.data.options.getString("text", true)
+			let text = args.getString("text", true);
+
+			if(text.length > 1024) return interaction.editOriginal({
+				content: `Text must be less than 1024 characters`,
+				allowedMentions: {
+					repliedUser: true,
+				},
+			});
 
 			const response = await openai.createImage({
-				prompt: args.getString("text", true),
+				prompt: text,
 				n: 1,
 				size: "1024x1024",
 				response_format: "url",
@@ -49,12 +58,13 @@ export default new Command({
 						},
 					},
 				],
-				flags: MessageFlags.EPHEMERAL,
+				allowedMentions: {
+					repliedUser: true
+				}
 			});
 		} catch (error) {
 			await interaction.editOriginal({
-				content: `Error: ${error}`,
-				flags: MessageFlags.EPHEMERAL,
+				content: `${error}`,
 			});
 		}
 	},
