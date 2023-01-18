@@ -1,3 +1,4 @@
+import { ApplicationCommandBuilder } from '@oceanicjs/builders';
 import { Client, CreateApplicationCommandOptions, CommandInteraction, InteractionOptionsWrapper, PermissionName } from 'oceanic.js';
 
 interface ExecuteOptions {
@@ -6,14 +7,14 @@ interface ExecuteOptions {
     args: InteractionOptionsWrapper
 };
 type ExecuteFunction = (options: ExecuteOptions) => unknown;
-export type ICommand = {
-    category: string;
-    name: string;
-    description: string;
-    usage: string;
-    requiredPermissions?: (PermissionName | bigint)[];
 
-    execute: ExecuteFunction
+export type ICommand = {
+	category: string;
+	name: string;
+	description: string;
+	usage: string;
+	requiredPermissions?: (PermissionName | bigint)[];
+	execute: ExecuteFunction;
 } & CreateApplicationCommandOptions;
 
 export class Command {
