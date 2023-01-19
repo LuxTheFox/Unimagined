@@ -11,7 +11,7 @@
     "start": "yarn build && cd dist && node index.js"
   },
   "dependencies": {
-    "@oceanicjs/builders": "^1.1.7",
+    "oceanic-collectors": "^1.0.7",
     "oceanic.js": "^1.4.1",
     "openai": "^3.1.0"
   },

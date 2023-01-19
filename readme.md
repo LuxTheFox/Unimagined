@@ -5,7 +5,8 @@ __config.json__
 {
     "token": "",
     "devGuild": "",
-    "openai_key": "",
+    "openai_key": "",,
+    "createCommands": true/false
 }
 ```
 

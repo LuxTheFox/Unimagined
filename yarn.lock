@@ -13,11 +13,6 @@
     tslib "^2.4.0"
     ws "^8.9.0"
 
-"@oceanicjs/builders@^1.1.7":
-  version "1.1.7"
-  resolved "https://registry.yarnpkg.com/@oceanicjs/builders/-/builders-1.1.7.tgz#99d48ec708c33525caae0e9c881e963cbddfd49e"
-  integrity sha512-pF7tL9vzkHfLWO7IBKHm4uHl2M28VkWXhiV5Ap8t4DMpM3ZrxkQnFjJ60w3SFikpxQ9jDc5x5eVvbDwUWq7yqA==
-
 "@types/node@*":
   version "18.11.18"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.18.tgz#8dfb97f0da23c2293e554c5a50d61ef134d7697f"
@@ -91,6 +86,11 @@ mime-types@^2.1.12:
   integrity sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==
   dependencies:
     mime-db "1.52.0"
+
+oceanic-collectors@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/oceanic-collectors/-/oceanic-collectors-1.0.7.tgz#175cb1a1e1876b1742a5ef2a340a6a7dee941432"
+  integrity sha512-hPI4PTrZkBU31g+DJu73CPH3tuBLP9+ifUgAN0WDtZQBfLNielH7Jq1eXGRVNPCqou96njSkzXZLedndfQVvkA==
 
 oceanic.js@^1.4.1:
   version "1.4.1"

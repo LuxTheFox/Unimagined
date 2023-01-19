@@ -1,4 +1,4 @@
-import { ApplicationCommandTypes, MessageFlags } from 'oceanic.js';
+import { ApplicationCommandTypes, Message, MessageFlags } from 'oceanic.js';
 import { Command } from "../Structs/Command";
 
 export default new Command({
@@ -7,10 +7,14 @@ export default new Command({
     name: 'ping',
     description: 'Get the bots ping',
     usage: '/ping',
-    execute({ interaction }) {
-        interaction.createMessage({
+    async execute({ interaction }) {
+        await interaction.defer(MessageFlags.LOADING + MessageFlags.EPHEMERAL);
+        const defer = await interaction.getOriginal();
+
+        await interaction.editOriginal({
             embeds: [{
-                title: 'Pong!',
+                title: `Latency: ${defer.createdAt.getTime() - interaction.createdAt.getTime()}ms`,
+                color: 16106102
             }],
             flags: MessageFlags.EPHEMERAL
         });

@@ -1,4 +1,3 @@
-import { ApplicationCommandBuilder } from '@oceanicjs/builders';
 import { Client, CreateApplicationCommandOptions, CommandInteraction, InteractionOptionsWrapper, PermissionName } from 'oceanic.js';
 
 interface ExecuteOptions {
