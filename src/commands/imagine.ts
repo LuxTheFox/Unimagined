@@ -5,11 +5,9 @@ import {
 	ApplicationCommandOptionTypes,
 	ApplicationCommandTypes,
 	ButtonStyles,
-	Client,
-	ComponentInteraction,
 	ComponentTypes,
 	InteractionTypes,
-	MessageFlags
+	MessageFlags,
 } from "oceanic.js";
 import { InteractionCollector } from 'oceanic-collectors'
 import { Command } from "../Structs/Command";
@@ -84,39 +82,39 @@ export default new Command({
         });
 
       const message = await interaction.editOriginal({
-        embeds: [
-          {
-            title: `Imagined the unimagined! ${CustomEmojis.SparklingStar}`,
-            description: `Prompt: ${Prompt}`,
-            image: {
-              url: ImageURL,
-            },
-            color: 16106102,
-          },
-        ],
-        components: [
-          {
-            type: ComponentTypes.ACTION_ROW,
-            components: [
-              {
-                type: ComponentTypes.BUTTON,
-                label: "Source",
-                style: ButtonStyles.LINK,
-                url: ImageURL,
-              },
-              {
-                type: ComponentTypes.BUTTON,
-                label: "Create variation?",
-                customID: "create-variation",
-                style: ButtonStyles.SECONDARY,
-              },
-            ],
-          },
-        ],
-        allowedMentions: {
-          repliedUser: true,
-        },
-      });
+							embeds: [
+								{
+									title: `Imagined the unimagined! ${CustomEmojis.SparklingStar}`,
+									description: `Prompt: ${Prompt}`,
+									image: {
+										url: ImageURL,
+									},
+									color: 16106102,
+								},
+							],
+							components: [
+								{
+									type: ComponentTypes.ACTION_ROW,
+									components: [
+										{
+											type: ComponentTypes.BUTTON,
+											label: "Source",
+											style: ButtonStyles.LINK,
+											url: ImageURL,
+										},
+										{
+											type: ComponentTypes.BUTTON,
+											label: "Create variation?",
+											customID: "create-variation",
+											style: ButtonStyles.SECONDARY,
+										},
+									],
+								},
+							],
+							allowedMentions: {
+								repliedUser: true,
+							},
+						});
 
       const listener = new InteractionCollector(client, {
         message: message,
