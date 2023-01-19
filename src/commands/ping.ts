@@ -1,4 +1,4 @@
-import { ApplicationCommandTypes, Message, MessageFlags } from "oceanic.js";
+import { ApplicationCommandTypes, MessageFlags } from "oceanic.js";
 import { Command } from "../Structs/Command";
 
 export default new Command({
@@ -9,6 +9,7 @@ export default new Command({
   usage: "/ping",
   async execute({ interaction }) {
     await interaction.defer(MessageFlags.LOADING + MessageFlags.EPHEMERAL);
+
     const defer = await interaction.getOriginal();
 
     await interaction.editOriginal({
