@@ -1,68 +1,119 @@
-import { Configuration, CreateImageRequest, ImagesResponseDataInner, OpenAIApi } from "openai";
-import { AxiosRequestConfig } from 'axios';
-import { randomUUID } from 'crypto';
-import config from "./config.json"
-import fs from 'fs';
+import {
+	Configuration,
+	CreateImageRequest,
+	ImagesResponseDataInner,
+	OpenAIApi,
+} from "openai";
+import { AxiosRequestConfig } from "axios";
+import { randomUUID } from "node:crypto";
+import config from "./config.json";
 
 const configuration = new Configuration({
 	apiKey: config["openai_key"],
-}); //Dont add orginization without inviting me since I get error 401 Unauthorized
+}); //Don't add organization without inviting me since I get error 401 Unauthorized
 
+interface ImageBuffer extends Buffer {
+	name: string;
+}
+
+/** The results sent to the api buffer */
+interface ImageResult {
+	UUID: string;
+	Response: ImagesResponseDataInner;
+  
+}
+interface ImageBuffer extends Buffer {
+  name: string;
+}
+
+/** The results sent to the api buffer */
+interface ImageResult {
+  UUID: string;
+  Response: ImagesResponseDataInner;
+}
+
+/**
+ * The OpenAI Wrapper class
+ * @class
+ * @see https://beta.openai.com/docs/api-reference/images
+ */
 class OpenAPIWrapper {
-	private openAI: OpenAIApi;
-	private Images = new Map();
-	constructor(configuration: Configuration) {
-		this.openAI = new OpenAIApi(configuration)
-	};
+  private openAI: OpenAIApi;
+  private Images = new Map<string, string>();
+  public constructor(configuration: Configuration) {
+    this.openAI = new OpenAIApi(configuration);
+  }
 
-	/*
-	Setimage and Getimage function notes,
-	
-	Could be useful depending on what command we add
-	Could delete if not used in final project
-	*/
-	private SetImage(UUID: string, ImageURL: string) {
-		this.Images.set(UUID, ImageURL);
-	}; //Setting the URL of an image in storage with a UUID
+  /**
+   * Adds an image to the images cache
+   * @param UUID The unique identifier for the image
+   * @param ImageURL The URL of the image
+   */
+  private SetImage(UUID: string, ImageURL: string) {
+    this.Images.set(UUID, ImageURL);
+  }
 
-	public GetImage(UUID: string) {
-		return this.Images.get(UUID);
-	}; //Getting the URL of an image from the UUID
+  /**
+   * Gets an image from the images cache
+   * @param UUID The unique identifier for the image
+   * @returns
+   */
+  public GetImage(UUID: string): string | null {
+    return this.Images.get(UUID) || null;
+  }
 
-	//Simple, Fetch URL -> return buffer that can used with other OpenAI endpoints
-	async GetBufferFromURL(URL: string) {
-		const ArrayBuffer = await(await fetch(URL)).arrayBuffer();
-		const ConvertedBuffer: Buffer = Buffer.from(ArrayBuffer)
-		const FinalBuffer: any = ConvertedBuffer;
-		FinalBuffer.name = 'image.png';
-		return FinalBuffer;
-	};
-	
-	/*Simple, Call the createImage endpoint with the requested options an
+  /**
+   * Creates a buffer from a URL
+   * @param URL The URL of the image
+   * @returns
+   */
+  public async GetBufferFromURL(URL: string): Promise<ImageBuffer> {
+    const ArrayBuffer = await (await fetch(URL)).arrayBuffer();
+    const ConvertedBuffer = Buffer.from(ArrayBuffer) as ImageBuffer;
+    const FinalBuffer = ConvertedBuffer;
+    FinalBuffer.name = "image.png";
+    return FinalBuffer;
+  }
 
-	Extra notes
-	Runs through each image and generates a UUID for use with the SetImage function
-	If we end up removing set image we can just return { response: Image } inside the foreach loop
-	*/
-	async GenerateImage(OpenAIOptions: CreateImageRequest, AxiosOptions?: AxiosRequestConfig) {
-		const Images = await this.openAI.createImage({
-			...OpenAIOptions,
-			response_format: 'url'
-		}, AxiosOptions);
+  /**
+   * Creates an image from the OpenAI API
+   * @param OpenAIOptions
+   * @param AxiosOptions
+   * @returns
+   */
+  public async GenerateImage(
+    OpenAIOptions: CreateImageRequest,
+    AxiosOptions?: AxiosRequestConfig
+  ): Promise<ImageResult[]> {
+    const Images = await this.openAI
+      .createImage(
+        {
+          ...OpenAIOptions,
+          response_format: "url",
+        },
+        AxiosOptions
+      )
+      .catch((err) => {
+        console.error(err);
+        return null;
+      });
 
-		const result: { UUID: string, Response: ImagesResponseDataInner }[] = [];
-		Images.data.data.forEach(Image => {
-			const UUID = randomUUID();
-			this.SetImage(UUID, Image.url as string);
-			result.push({
-				UUID: UUID,
-				Response: Image
-			});
-		});
-		return result;
-	};
+    if (!Images) return [];
 
-	/*
+    const result: ImageResult[] = [];
+
+    for (const Image of Images.data.data) {
+      const UUID = randomUUID();
+      this.SetImage(UUID, Image.url as string);
+      result.push({
+        UUID: UUID,
+        Response: Image,
+      });
+    }
+
+    return result;
+  }
+  /* 
 	async GenerateEdit(EditOptions: {
 		image: File, 
 		mask: File, 
@@ -83,36 +134,48 @@ class OpenAPIWrapper {
 	};
 	Keep this commented out unless we decide to add image masking features*/
 
-	/*
-	Basically the same as the generate image function but with the CreateImageVariation Endpoint
-	*/
-	async GenerateVariation(VariationOptions: {
-		image: File,
-		n?: number, 
-		size?: string,
-		user?: string,
-		options?: AxiosRequestConfig
-	}) {
-		const variations = await this.openAI.createImageVariation(
-			VariationOptions.image,
-			VariationOptions.n,
-			VariationOptions.size,
-			"url",
-			VariationOptions.user,
-			VariationOptions.options);
-		
-		const result: { UUID: string, Response: ImagesResponseDataInner }[] = [];
-		variations.data.data.forEach(variation => {
-			const UUID = randomUUID();
-			this.SetImage(UUID, variation.url as string);
-			result.push({
-				UUID: UUID,
-				Response: variation
-			});
-		});
-		
-		return result;
-	};
+  /**
+   * Creates an image variation from the OpenAI API
+   * @param VariationOptions
+   * @returns
+   */
+  public async GenerateVariation(VariationOptions: {
+    image: File;
+    n?: number;
+    size?: string;
+    user?: string;
+    options?: AxiosRequestConfig;
+  }): Promise<ImageResult[]> {
+    const variations = await this.openAI
+      .createImageVariation(
+        VariationOptions.image,
+        VariationOptions.n,
+        VariationOptions.size,
+        "url",
+        VariationOptions.user,
+        VariationOptions.options
+      )
+      .catch((err) => {
+        console.error(err);
+        return null;
+      });
+
+    if (!variations) return [];
+
+    const result: ImageResult[] = [];
+
+    for (let i = 0; i < variations.data.data.length; i++) {
+      const variation = variations.data.data[i];
+      const UUID = randomUUID();
+      this.SetImage(UUID, variation.url as string);
+      result.push({
+        UUID: UUID,
+        Response: variation,
+      });
+    }
+
+    return result;
+  }
 }
 
 export const openai = new OpenAPIWrapper(configuration)
