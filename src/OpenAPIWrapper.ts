@@ -15,23 +15,35 @@ class OpenAPIWrapper {
 		this.openAI = new OpenAIApi(configuration)
 	};
 
+	/*
+	Setimage and Getimage function notes,
+	
+	Could be useful depending on what command we add
+	Could delete if not used in final project
+	*/
 	private SetImage(UUID: string, ImageURL: string) {
 		this.Images.set(UUID, ImageURL);
-	};
+	}; //Setting the URL of an image in storage with a UUID
 
 	public GetImage(UUID: string) {
 		return this.Images.get(UUID);
-	};
+	}; //Getting the URL of an image from the UUID
 
+	//Simple, Fetch URL -> return buffer that can used with other OpenAI endpoints
 	async GetBufferFromURL(URL: string) {
 		const ArrayBuffer = await(await fetch(URL)).arrayBuffer();
 		const ConvertedBuffer: Buffer = Buffer.from(ArrayBuffer)
 		const FinalBuffer: any = ConvertedBuffer;
-		FinalBuffer.name = 'image.png'
-		console.log(FinalBuffer);
+		FinalBuffer.name = 'image.png';
 		return FinalBuffer;
 	};
-		
+	
+	/*Simple, Call the createImage endpoint with the requested options an
+
+	Extra notes
+	Runs through each image and generates a UUID for use with the SetImage function
+	If we end up removing set image we can just return { response: Image } inside the foreach loop
+	*/
 	async GenerateImage(OpenAIOptions: CreateImageRequest, AxiosOptions?: AxiosRequestConfig) {
 		const Images = await this.openAI.createImage({
 			...OpenAIOptions,
@@ -49,6 +61,7 @@ class OpenAPIWrapper {
 		});
 		return result;
 	};
+
 	/*
 	async GenerateEdit(EditOptions: {
 		image: File, 
@@ -70,6 +83,9 @@ class OpenAPIWrapper {
 	};
 	Keep this commented out unless we decide to add image masking features*/
 
+	/*
+	Basically the same as the generate image function but with the CreateImageVariation Endpoint
+	*/
 	async GenerateVariation(VariationOptions: {
 		image: File,
 		n?: number, 
