@@ -30,7 +30,9 @@ export default new Command({
       required: true,
     },
   ],
-  cooldown: {},
+  cooldown: {
+    user: 10,
+  },
   async execute({ client, interaction, args }) {
     try {
       const Prompt = args.getString("prompt", true);

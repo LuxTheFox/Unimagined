@@ -10,7 +10,6 @@ export default new Command({
   cooldown: {
     user: 8,
     guild: 5,
-    global: 3
   },
   async execute({ interaction }) {
     await interaction.defer(MessageFlags.LOADING + MessageFlags.EPHEMERAL);

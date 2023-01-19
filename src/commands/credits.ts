@@ -11,7 +11,8 @@ export default new Command({
   description: "Bot credits",
   usage: "/credits",
   cooldown: {
-    user: 3
+    user: 10,
+    guild: 5,
   },
   async execute({ interaction }) {
     await interaction.createMessage({
