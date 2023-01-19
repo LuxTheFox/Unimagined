@@ -32,7 +32,9 @@ export type ICommand = {
   name: string;
   description: string;
   usage: string;
+  devOnly?: boolean;
   requiredUserPermissions?: (PermissionName | bigint)[];
+  requiredBotPermissions?: (PermissionName | bigint)[];
   cooldown?: ICommandCooldowns;
   execute: ExecuteFunction;
 } & CreateApplicationCommandOptions;

@@ -18,7 +18,7 @@ export default new Command({
     await interaction.createMessage({
       embeds: [
         {
-          description: `Unimagined is a bot created by [ThatGuyJamal](${ghLink1}) & [Lux](${ghLink2}).\n\nThe bot allows users to generate AI generated images, and also allows users to generate images using a neural network. It is free to use to anyone on discord.`,
+          description: `\`Unimagined\` is a bot created by __[ThatGuyJamal](${ghLink1})__ & __[Lux](${ghLink2})__.\n\nThe bot allows users to generate AI generated images, and also allows users to generate images using a neural network. It is free to use to anyone on discord.`,
           color: 16106102,
           thumbnail: {
             url: interaction.guild?.iconURL() ?? "https://discord.com/assets/1cbd08c76f8af6dddce02c5138971129.png" 

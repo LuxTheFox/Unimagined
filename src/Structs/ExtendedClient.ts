@@ -79,6 +79,39 @@ export class ExtendedClient extends Client {
 		const cmd = this.commands.get(i.data.name);
 		if (!cmd) return;
 
+		if (cmd.devOnly && !this.Developers.includes(i.user.id)) {
+			return await i.createMessage({
+				embeds: [
+					{
+						title: `Permission Error ${CustomEmojis.RedCross}`,
+						description: "This command is only for developers!",
+						color: 16106102,
+					},
+				],
+				flags: MessageFlags.EPHEMERAL,
+			});
+		}
+
+		let botPermissions = i.appPermissions
+
+		if (
+			cmd.requiredBotPermissions &&
+			!cmd.requiredBotPermissions.every((x) => botPermissions?.has(x))
+		) {
+			return await i.createMessage({
+				embeds: [
+					{
+						title: `Permission Error ${CustomEmojis.RedCross}`,
+						description: `I am unauthorized to run this command!\n\n Missing Permissions: ${cmd.requiredBotPermissions
+							.filter((x) => !botPermissions?.has(x))
+							.join(", ")}`,
+						color: 16106102,
+					},
+				],
+				flags: MessageFlags.EPHEMERAL,
+			});
+		}
+
 		if (
 			cmd.requiredUserPermissions &&
 			!cmd.requiredUserPermissions.every((x) => i.memberPermissions?.has(x))

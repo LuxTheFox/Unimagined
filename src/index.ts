@@ -13,7 +13,6 @@ const client = new ExtendedClient({
 
 client.on("ready", async () => {
   console.log(`[✔️]: Online as ${client.user.tag}`);
-
   await client.LoadCommands("commands", devGuild);
 });
 
