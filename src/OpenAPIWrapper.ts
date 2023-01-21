@@ -10,7 +10,7 @@ import config from "./config.json";
 
 const configuration = new Configuration({
 	apiKey: config["openai_key"],
-}); //Don't add organization without inviting me since I get error 401 Unauthorized
+}); //Don't add organization, It gives error 401 Unauthorized
 
 interface ImageBuffer extends Buffer {
 	name: string;
