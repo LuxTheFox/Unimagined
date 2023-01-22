@@ -1,6 +1,6 @@
 ## Code Jam Bot
 
-~[Bot Avatar](./images/botAv.png)
+![Bot Avatar](./images/botAv.png)
 
 __config.json__
 ```json
